@@ -1,5 +1,6 @@
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
+import "@/config/env";
 import { fontRoboto } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
 import "@/styles/globals.css";
@@ -28,7 +29,7 @@ export default function RootLayout({
             children: null,
           }}
         >
-          <div className="relative flex flex-col h-screen">
+          <div className="relative flex flex-col h-dvh">
             <Navbar />
             <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
               {children}

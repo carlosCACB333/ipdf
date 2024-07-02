@@ -1,5 +1,6 @@
 "use client ";
 
+import { menus } from "@/config/menus";
 import { Button } from "@nextui-org/button";
 import {
   Dropdown,
@@ -8,29 +9,7 @@ import {
   DropdownTrigger,
 } from "@nextui-org/dropdown";
 import { NavbarItem } from "@nextui-org/navbar";
-import { ChevronDown, FileX, Files } from "./icons";
-
-interface Menu {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  href: string;
-}
-
-const menus: Menu[] = [
-  {
-    title: "Unir PDFs",
-    description: "Combina varios archivos PDF en uno solo",
-    icon: <Files />,
-    href: "/pdf/merge",
-  },
-  {
-    title: "Eliminar páginas",
-    description: "Elimina páginas no deseadas de tu archivo PDF",
-    icon: <FileX />,
-    href: "/pdf/remove",
-  },
-];
+import { ChevronDown } from "./icons";
 
 export const Menus = () => {
   return (
@@ -61,7 +40,7 @@ export const Menus = () => {
               key={menu.title}
               description={menu.description}
               href={menu.href}
-              startContent={menu.icon}
+              startContent={<menu.Icon size={28} className="text-primary" />}
             >
               {menu.title}
             </DropdownItem>

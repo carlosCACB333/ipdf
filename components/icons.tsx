@@ -254,6 +254,33 @@ export const Files: React.FC<IconSvgProps> = ({
   );
 };
 
+export const Upload: React.FC<IconSvgProps> = ({
+  fill = "currentColor",
+  size,
+  height,
+  width,
+  ...props
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="None"
+      height={size || height || 24}
+      viewBox="0 0 24 24"
+      width={size || width || 24}
+      strokeWidth="1.5"
+      stroke={fill}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />
+      <path d="M9 15l3 -3l3 3" />
+      <path d="M12 12l0 9" />
+    </svg>
+  );
+};
 export const FileX: React.FC<IconSvgProps> = ({
   fill = "currentColor",
   size,
@@ -278,6 +305,32 @@ export const FileX: React.FC<IconSvgProps> = ({
       <path d="M14 3v4a1 1 0 0 0 1 1h4" />
       <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
       <path d="M10 12l4 4m0 -4l-4 4" />
+    </svg>
+  );
+};
+export const Close: React.FC<IconSvgProps> = ({
+  fill = "currentColor",
+  size,
+  height,
+  width,
+  ...props
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="None"
+      height={size || height || 24}
+      viewBox="0 0 24 24"
+      width={size || width || 24}
+      strokeWidth="1.5"
+      stroke={fill}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M18 6l-12 12" />
+      <path d="M6 6l12 12" />
     </svg>
   );
 };
