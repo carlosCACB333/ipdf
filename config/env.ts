@@ -7,10 +7,9 @@ const env = z.object({
 
 interface Env extends z.infer<typeof env> {}
 
-process.env = {
-  ...process.env,
-  ...env.parse(process.env),
-};
+if (process.env.NODE_ENV === "development") {
+  env.parse(process.env);
+}
 
 declare global {
   namespace NodeJS {
