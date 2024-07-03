@@ -51,6 +51,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
+  keywords: siteConfig.keywords,
 };
 
 export const viewport: Viewport = {
