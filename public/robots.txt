@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://ipdf.lat
+
+# Sitemaps
+Sitemap: https://ipdf.lat/sitemap.xml
