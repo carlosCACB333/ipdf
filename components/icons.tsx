@@ -281,6 +281,7 @@ export const Upload: React.FC<IconSvgProps> = ({
     </svg>
   );
 };
+
 export const FileX: React.FC<IconSvgProps> = ({
   fill = "currentColor",
   size,
@@ -308,6 +309,7 @@ export const FileX: React.FC<IconSvgProps> = ({
     </svg>
   );
 };
+
 export const Close: React.FC<IconSvgProps> = ({
   fill = "currentColor",
   size,
@@ -331,6 +333,88 @@ export const Close: React.FC<IconSvgProps> = ({
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M18 6l-12 12" />
       <path d="M6 6l12 12" />
+    </svg>
+  );
+};
+
+export const Check: React.FC<IconSvgProps> = ({
+  fill = "currentColor",
+  size,
+  height,
+  width,
+  ...props
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="None"
+      height={size || height || 24}
+      viewBox="0 0 24 24"
+      width={size || width || 24}
+      strokeWidth="1.5"
+      stroke={fill}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M5 12l5 5l10 -10" />
+    </svg>
+  );
+};
+
+export const ArrowLeft: React.FC<IconSvgProps> = ({
+  fill = "currentColor",
+  size,
+  height,
+  width,
+  ...props
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="None"
+      height={size || height || 24}
+      viewBox="0 0 24 24"
+      width={size || width || 24}
+      strokeWidth="1.5"
+      stroke={fill}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M5 12l14 0" />
+      <path d="M5 12l4 4" />
+      <path d="M5 12l4 -4" />
+    </svg>
+  );
+};
+
+export const ArrowRight: React.FC<IconSvgProps> = ({
+  fill = "currentColor",
+  size,
+  height,
+  width,
+  ...props
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="None"
+      height={size || height || 24}
+      viewBox="0 0 24 24"
+      width={size || width || 24}
+      strokeWidth="1.5"
+      stroke={fill}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M5 12l14 0" />
+      <path d="M13 18l6 -6" />
+      <path d="M13 6l6 6" />
     </svg>
   );
 };

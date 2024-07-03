@@ -17,6 +17,7 @@ export const text = tv({
       xs: "text-xs lg:text-sm",
       sm: "text-sm lg:text-base",
       base: "text-base lg:text-lg",
+      md: "text-lg lg:text-xl",
       lg: "text-2xl lg:text-3xl font-bold",
       xl: "text-[2.3rem] lg:text-5xl leading-9 font-bold",
     },
@@ -45,4 +46,21 @@ export const text = tv({
       class: "bg-clip-text bg-gradient-to-b",
     },
   ],
+});
+
+export const gradient = tv({
+  base: "bg-gradient-to-r",
+  variants: {
+    bg: {
+      violet: "from-[#FF1CF7] to-[#b249f8]",
+      yellow: "from-[#FF705B] to-[#FFB457]",
+      blue: "from-[#5EA2EF] to-[#0072F5]",
+      cyan: "from-[#00b7fa] to-[#01cfea]",
+      green: "from-[#6FEE8D] to-[#17c964]",
+      pink: "from-[#FF72E1] to-[#F54C7A]",
+    },
+  },
+  defaultVariants: {
+    bg: "violet",
+  },
 });
