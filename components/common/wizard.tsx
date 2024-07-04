@@ -1,4 +1,5 @@
 import { Button } from "@nextui-org/button";
+import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 import { ReactElement, useState } from "react";
 import { ArrowLeft, ArrowRight, Check } from "../icons";
@@ -69,6 +70,8 @@ export const Wizard = ({ title, description, children }: Props) => {
           endContent={<ArrowRight />}
           isLoading={isLoading}
           isDisabled={isLoading}
+          href={current.props.href}
+          as={current.props.href ? Link : undefined}
           onClick={async () => {
             setIsLoading(true);
             const isNext = await current.props.onNext?.();
@@ -92,6 +95,7 @@ interface StepProps {
   buttonTitle?: string;
   onNext?: () => Promise<boolean> | boolean;
   onPrev?: () => Promise<boolean> | boolean;
+  href?: string;
 }
 
 export const Step = ({ children }: StepProps) => {

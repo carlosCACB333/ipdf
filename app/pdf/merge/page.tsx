@@ -5,12 +5,15 @@ import { text } from "@/components/primitives";
 import { Button } from "@nextui-org/button";
 import clsx from "clsx";
 import { ChangeEventHandler, DragEventHandler, useRef, useState } from "react";
+import { toast } from "sonner";
+
+const url = process.env.NEXT_PUBLIC_APP_URL;
 
 export default function Home() {
   const container = useRef<HTMLLabelElement>(null);
   const [dragActive, setDragActive] = useState<boolean>(false);
   const [files, setFiles] = useState<File[]>([]);
-  const [merged, setMerged] = useState<File | null>(null);
+  const [output, setOutput] = useState<string | undefined>(undefined);
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     e.preventDefault();
@@ -55,38 +58,35 @@ export default function Home() {
 
   const mergePdfs = async () => {
     try {
-      if (files.length < 2) return false;
+      if (files.length < 2) {
+        toast.error("Debes subir al menos dos PDFs");
+        return false;
+      }
 
-      const url = process.env.NEXT_PUBLIC_APP_URL;
       const formData = new FormData();
       files.forEach((file) => formData.append("files", file));
-      const response = await fetch(`${url}/pdf/merge`, {
+      const response = await fetch(`${url}/api/pdf/merge`, {
         method: "POST",
         body: formData,
         headers: {
           "Access-Control-Allow-Origin": "*",
         },
       });
-      console.log(response);
-      const blob = await response.blob();
-      const merged = new File([blob], "merged.pdf", {
-        type: "application/pdf",
-      });
-      setMerged(merged);
+
+      const json = await response.json();
+      console.log(json);
+      if (json.status !== "SUCCESS") {
+        toast.error("Error al unir los PDFs");
+        return false;
+      }
+
+      toast.success("PDFs unidos correctamente");
+      setOutput(json.data.url);
       return true;
     } catch (error) {
       console.error(error);
       return false;
     }
-  };
-
-  const onDownload = () => {
-    if (!merged) return;
-    const url = URL.createObjectURL(merged);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = merged.name;
-    a.click();
   };
 
   return (
@@ -163,12 +163,12 @@ export default function Home() {
         title="Descargar PDF"
         description="Haz clic en el botón para descargar tu PDF unido"
         buttonTitle="Descargar PDF"
+        href={`${url}/${output}`}
         onNext={async () => {
-          onDownload();
           return false;
         }}
         onPrev={() => {
-          setMerged(null);
+          setOutput(undefined);
           return true;
         }}
       >
