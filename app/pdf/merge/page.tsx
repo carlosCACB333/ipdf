@@ -1,75 +1,38 @@
 "use client";
+import { FileTemp, FileUploader } from "@/components/common/file-uploader";
 import { Step, Wizard } from "@/components/common/wizard";
-import { Close, Upload } from "@/components/icons";
 import { text } from "@/components/primitives";
-import { Button } from "@nextui-org/button";
-import clsx from "clsx";
-import { ChangeEventHandler, DragEventHandler, useRef, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const url = process.env.NEXT_PUBLIC_APP_URL;
 
 export default function Home() {
-  const container = useRef<HTMLLabelElement>(null);
-  const [dragActive, setDragActive] = useState<boolean>(false);
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<FileTemp[]>([]);
   const [output, setOutput] = useState<string | undefined>(undefined);
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    e.preventDefault();
-    let files = e.target.files;
-    if (!files) return;
-    for (let i = 0; i < files["length"]; i++) {
-      const file = files[i];
-      if (file.type !== "application/pdf") continue;
-      setFiles((prevState) => [...prevState, file]);
-    }
-  };
-
-  const handleDrop: DragEventHandler<HTMLLabelElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    let files = e.dataTransfer.files;
-    for (let i = 0; i < files["length"]; i++) {
-      const file = files[i];
-      if (file.type !== "application/pdf") continue;
-      setFiles((prevState) => [...prevState, file]);
-    }
-  };
-
-  const handleDragLeave: DragEventHandler<HTMLLabelElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-  };
-
-  const handleDragOver: DragEventHandler<HTMLLabelElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(true);
-  };
-
-  const handleDragEnter: DragEventHandler<HTMLLabelElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(true);
-  };
+  const filesUp = files.filter((file) => file.status === "success");
+  const isPending = files.some((file) => file.status === "loading");
 
   const mergePdfs = async () => {
     try {
-      if (files.length < 2) {
+      if (isPending) {
+        toast.error("Espera a que los archivos terminen de subir");
+        return false;
+      }
+
+      if (filesUp.length < 2) {
         toast.error("Debes subir al menos dos PDFs");
         return false;
       }
 
-      const formData = new FormData();
-      files.forEach((file) => formData.append("files", file));
       const response = await fetch(`${url}/api/pdf/merge`, {
         method: "POST",
-        body: formData,
+        body: JSON.stringify({
+          urls: filesUp.map((file) => file.url),
+        }),
         headers: {
-          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
         },
       });
 
@@ -98,64 +61,15 @@ export default function Home() {
         title="Subir PDFs"
         description="Arrastra y suelta tus PDFs o haz clic para seleccionarlos"
         onNext={mergePdfs}
+        isDisabled={filesUp.length < 2 || isPending}
       >
-        <section className="flex flex-col items-center justify-center gap-4">
-          <div className="flex flex-col gap-2 w-full">
-            {files.map((file, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between w-full p-4 bg-content1 rounded-lg"
-              >
-                <p className={text({ color: "disabled" })}>{file.name}</p>
-                <Button
-                  isIconOnly
-                  variant="light"
-                  onClick={() =>
-                    setFiles((prev) => prev.filter((_, i) => i !== index))
-                  }
-                >
-                  <Close />
-                </Button>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex items-center justify-center w-full">
-            <label
-              ref={container}
-              className={clsx(
-                "flex flex-col items-center justify-center w-full h-64 border-2",
-                "border-dashed rounded-lg cursor-pointer transition-all",
-                "hover:border-primary hover:text-primary p-4",
-                {
-                  "border-primary text-primary": dragActive,
-                  "border-gray-500 text-gray-500": !dragActive,
-                }
-              )}
-              draggable
-              onDragOver={handleDragOver}
-              onDragEnter={handleDragEnter}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-            >
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <Upload size={48} />
-                <p>
-                  <span className="font-semibold"> Haga clic para cargar </span>
-                  o arrastre y suelte tus PDFs aquí
-                </p>
-                <p>PDFs hasta 10MB</p>
-              </div>
-              <input
-                type="file"
-                className="hidden"
-                multiple
-                accept=".pdf"
-                onChange={handleChange}
-              />
-            </label>
-          </div>
-
+        <section className="">
+          <FileUploader
+            files={files}
+            setFiles={setFiles}
+            uploadURL={`${url}/api/pdf/upload`}
+            deleteURL={`${url}/api/pdf/delete`}
+          />
           <br />
         </section>
       </Step>
@@ -163,10 +77,7 @@ export default function Home() {
         title="Descargar PDF"
         description="Haz clic en el botón para descargar tu PDF unido"
         buttonTitle="Descargar PDF"
-        href={`${url}/${output}`}
-        onNext={async () => {
-          return false;
-        }}
+        href={output}
         onPrev={() => {
           setOutput(undefined);
           return true;

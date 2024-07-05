@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
@@ -17,6 +18,7 @@ export const Wizard = ({ title, description, children }: Props) => {
   const current = children[active];
   const size = children.length;
   const buttonText = current.props.buttonTitle || "Siguiente";
+  const isDisabled = current.props.isDisabled || false;
   return (
     <div className="flex flex-col md:flex-row gap-8">
       <div className={"mx:max-w-[300px] bg-content1 p-8 rounded-lg shadow-lg"}>
@@ -69,7 +71,7 @@ export const Wizard = ({ title, description, children }: Props) => {
           size="lg"
           endContent={<ArrowRight />}
           isLoading={isLoading}
-          isDisabled={isLoading}
+          isDisabled={isDisabled || isLoading}
           href={current.props.href}
           as={current.props.href ? Link : undefined}
           onClick={async () => {
@@ -96,6 +98,7 @@ interface StepProps {
   onNext?: () => Promise<boolean> | boolean;
   onPrev?: () => Promise<boolean> | boolean;
   href?: string;
+  isDisabled?: boolean;
 }
 
 export const Step = ({ children }: StepProps) => {
