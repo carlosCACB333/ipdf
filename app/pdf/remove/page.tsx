@@ -18,8 +18,6 @@ export default function Home() {
   const [images, setImages] = useState<Image[]>([]);
   const [result, setResult] = useState<string>("");
 
-
-
   const file = files.find((file) => file.status === "success");
   const isPending = files.some((file) => file.status === "loading");
 

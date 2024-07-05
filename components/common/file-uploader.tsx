@@ -90,39 +90,54 @@ const FileCard = ({
   const [progress, setProgress] = useState(file.status === "success" ? 100 : 0);
 
   const uploadFile = () => {
-    const formData = new FormData();
-    formData.append("file", file.file);
+    try {
+      const formData = new FormData();
+      formData.append("file", file.file);
 
-    const request = new XMLHttpRequest();
+      const request = new XMLHttpRequest();
+      request.open("POST", uploadURL, true);
+      request.send(formData);
 
-    request.upload.onprogress = (e) => {
-      setProgress((e.loaded / e.total) * 100);
-    };
+      request.upload.onprogress = (e) => {
+        setProgress((e.loaded / e.total) * 100);
+      };
 
-    request.open("POST", uploadURL, true);
-    request.send(formData);
+      request.onload = (e) => {
+        const body = JSON.parse(request.responseText);
+        console.log(body);
+        if (request.status === 200) {
+          setProgress(100);
+          setFiles((prev) =>
+            prev.map((item, i) =>
+              i === index
+                ? {
+                    ...item,
+                    status: "success",
+                    url: body.data.url,
+                  }
+                : item
+            )
+          );
+        }
+      };
 
-    request.onload = (e) => {
-      const body = JSON.parse(request.responseText);
-      console.log(body);
-      if (request.status === 200) {
-        setProgress(100);
+      request.onerror = (e) => {
+        console.log("error");
         setFiles((prev) =>
           prev.map((item, i) =>
             i === index
               ? {
                   ...item,
-                  status: "success",
-                  url: body.data.url,
+                  status: "error",
                 }
               : item
           )
         );
-      }
-    };
+      };
 
-    request.onerror = (e) => {
-      console.log("error");
+      return request;
+    } catch (error) {
+      console.error(error);
       setFiles((prev) =>
         prev.map((item, i) =>
           i === index
@@ -133,22 +148,21 @@ const FileCard = ({
             : item
         )
       );
-    };
 
-    return request;
+      return null;
+    }
   };
 
   useEffect(() => {
     if (file.status === "success") return;
     const request = uploadFile();
     return () => {
-      request.abort();
+      request?.abort();
     };
   }, []);
 
   const handleDelete = () => {
     try {
-    
       const file_url = file.url.replace(base_url + "/uploads/", "");
       const url = deleteURL + "/" + file_url;
 
@@ -181,7 +195,15 @@ const FileCard = ({
         </div>
       </div>
 
-      {progress !== 100 ? (
+      {file.status === "success" ? (
+        <Button isIconOnly variant="light" onClick={handleDelete}>
+          <Close />
+        </Button>
+      ) : file.status === "error" ? (
+        <Button isIconOnly variant="light" onClick={uploadFile}>
+          <Upload />
+        </Button>
+      ) : (
         <CircularProgress
           aria-label="Loading..."
           size="sm"
@@ -189,14 +211,6 @@ const FileCard = ({
           color="primary"
           showValueLabel={true}
         />
-      ) : file.status === "success" ? (
-        <Button isIconOnly variant="light" onClick={handleDelete}>
-          <Close />
-        </Button>
-      ) : (
-        <Button isIconOnly variant="light" onClick={uploadFile}>
-          <Upload />
-        </Button>
       )}
     </div>
   );
