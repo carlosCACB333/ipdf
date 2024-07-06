@@ -89,66 +89,52 @@ const FileCard = ({
 }) => {
   const [progress, setProgress] = useState(file.status === "success" ? 100 : 0);
 
+  const setState = (state: Partial<FileTemp>) => {
+    setFiles((prev) =>
+      prev.map((item, i) =>
+        i === index
+          ? {
+              ...item,
+              ...state,
+            }
+          : item
+      )
+    );
+  };
+
   const uploadFile = () => {
     try {
       const formData = new FormData();
       formData.append("file", file.file);
 
       const request = new XMLHttpRequest();
-      request.open("POST", uploadURL, true);
-      request.send(formData);
 
       request.upload.onprogress = (e) => {
-        setProgress((e.loaded / e.total) * 100);
+        const progress = (e.loaded / e.total) * 100;
+        setProgress(progress);
       };
 
       request.onload = (e) => {
         const body = JSON.parse(request.responseText);
         console.log(body);
-        if (request.status === 200) {
-          setProgress(100);
-          setFiles((prev) =>
-            prev.map((item, i) =>
-              i === index
-                ? {
-                    ...item,
-                    status: "success",
-                    url: body.data.url,
-                  }
-                : item
-            )
-          );
-        }
+        setProgress(100);
+        setState({ status: "success", url: body.data.url });
       };
 
       request.onerror = (e) => {
-        console.log("error");
-        setFiles((prev) =>
-          prev.map((item, i) =>
-            i === index
-              ? {
-                  ...item,
-                  status: "error",
-                }
-              : item
-          )
-        );
+        console.error(e);
+        setProgress(0);
+        setState({ status: "error" });
       };
+
+      request.open("POST", uploadURL, true);
+      request.send(formData);
 
       return request;
     } catch (error) {
       console.error(error);
-      setFiles((prev) =>
-        prev.map((item, i) =>
-          i === index
-            ? {
-                ...item,
-                status: "error",
-              }
-            : item
-        )
-      );
-
+      setProgress(0);
+      setState({ status: "error" });
       return null;
     }
   };
@@ -163,26 +149,31 @@ const FileCard = ({
 
   const handleDelete = () => {
     try {
+      setState({ status: "loading" });
+      
       const file_url = file.url.replace(base_url + "/uploads/", "");
       const url = deleteURL + "/" + file_url;
 
       const request = new XMLHttpRequest();
-      request.open("DELETE", url, true);
-      request.send();
 
       request.onload = (e) => {
-        if (request.status === 200) {
-          setFiles((prev) => prev.filter((_, i) => i !== index));
-        }
+        setFiles((prev) => prev.filter((_, i) => i !== index));
       };
 
       request.onprogress = (e) => {
+        console.log(e);
         setProgress((e.loaded / e.total) * 100);
       };
+
+      request.open("DELETE", url, true);
+      request.send();
     } catch (error) {
+      setProgress(0);
       console.error(error);
     }
   };
+
+  console.log(progress);
   return (
     <div key={index} className="flex items-center justify-between w-full">
       <div className="flex gap-4">
@@ -195,15 +186,7 @@ const FileCard = ({
         </div>
       </div>
 
-      {file.status === "success" ? (
-        <Button isIconOnly variant="light" onClick={handleDelete}>
-          <Close />
-        </Button>
-      ) : file.status === "error" ? (
-        <Button isIconOnly variant="light" onClick={uploadFile}>
-          <Upload />
-        </Button>
-      ) : (
+      {file.status === "loading" ? (
         <CircularProgress
           aria-label="Loading..."
           size="sm"
@@ -211,6 +194,14 @@ const FileCard = ({
           color="primary"
           showValueLabel={true}
         />
+      ) : file.status === "success" ? (
+        <Button isIconOnly variant="light" onClick={handleDelete}>
+          <Close />
+        </Button>
+      ) : (
+        <Button isIconOnly variant="light" onClick={uploadFile}>
+          <Upload />
+        </Button>
       )}
     </div>
   );
