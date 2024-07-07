@@ -87,7 +87,7 @@ const FileCard = ({
   uploadURL: string;
   deleteURL: string;
 }) => {
-  const [progress, setProgress] = useState(file.status === "success" ? 100 : 0);
+  const [progress, setProgress] = useState(0);
 
   const setState = (state: Partial<FileTemp>) => {
     setFiles((prev) =>
@@ -116,7 +116,6 @@ const FileCard = ({
 
       request.onload = (e) => {
         const body = JSON.parse(request.responseText);
-        console.log(body);
         setProgress(100);
         setState({ status: "success", url: body.data.url });
       };
@@ -140,7 +139,6 @@ const FileCard = ({
   };
 
   useEffect(() => {
-    if (file.status === "success") return;
     const request = uploadFile();
     return () => {
       request?.abort();
@@ -150,7 +148,7 @@ const FileCard = ({
   const handleDelete = () => {
     try {
       setState({ status: "loading" });
-      
+
       const file_url = file.url.replace(base_url + "/uploads/", "");
       const url = deleteURL + "/" + file_url;
 
@@ -161,7 +159,6 @@ const FileCard = ({
       };
 
       request.onprogress = (e) => {
-        console.log(e);
         setProgress((e.loaded / e.total) * 100);
       };
 
@@ -173,7 +170,6 @@ const FileCard = ({
     }
   };
 
-  console.log(progress);
   return (
     <div key={index} className="flex items-center justify-between w-full">
       <div className="flex gap-4">

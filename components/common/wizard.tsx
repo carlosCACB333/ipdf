@@ -10,15 +10,22 @@ interface Props {
   children: ReactElement<StepProps>[];
   title: string;
   description: string;
+  persistState?: boolean;
 }
 
-export const Wizard = ({ title, description, children }: Props) => {
+export const Wizard = ({
+  title,
+  description,
+  children,
+  persistState = false,
+}: Props) => {
   const [active, setActive] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const current = children[active];
   const size = children.length;
   const buttonText = current.props.buttonTitle || "Siguiente";
   const isDisabled = current.props.isDisabled || false;
+
   return (
     <div className="flex flex-col md:flex-row gap-8">
       <div className={"mx:max-w-[300px] bg-content1 p-8 rounded-lg shadow-lg"}>
@@ -65,7 +72,15 @@ export const Wizard = ({ title, description, children }: Props) => {
         </ol>
       </div>
       <div className="flex flex-col w-full">
-        {current}
+        {persistState ? (
+          children.map((child, index) => (
+            <div key={index} className={clsx({ hidden: index !== active })}>
+              {child}
+            </div>
+          ))
+        ) : (
+          <div>{current}</div>
+        )}
         <Button
           color="primary"
           size="lg"

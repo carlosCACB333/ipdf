@@ -104,6 +104,7 @@ export default function Home() {
 
   return (
     <Wizard
+      persistState
       title="Eliminar páginas de tus PDFs"
       description="Elimina páginas de tus PDFs de forma sencilla y rápida"
     >
