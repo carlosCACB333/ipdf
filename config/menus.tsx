@@ -21,4 +21,10 @@ export const menus: Menu[] = [
     Icon: FileX,
     href: "/pdf/remove",
   },
+  {
+    title: "PDF a Imágenes",
+    description: "Convierte tus archivos PDF a imágenes de alta calidad",
+    Icon: FileX,
+    href: "/pdf/to/images",
+  },
 ];

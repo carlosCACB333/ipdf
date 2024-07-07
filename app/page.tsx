@@ -19,7 +19,7 @@ export default function Home() {
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {menus.map((menu) => (
           <Card key={menu.title} className="w-[300px]">
             <CardBody>

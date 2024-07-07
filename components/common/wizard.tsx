@@ -63,7 +63,11 @@ export const Wizard = ({
                   }
                 )}
               >
-                {index < active ? <Check className="" /> : index + 1}
+                {index < active || active == size - 1 ? (
+                  <Check className="" />
+                ) : (
+                  index + 1
+                )}
               </span>
               <h3 className="font-medium leading-tight">{props.title}</h3>
               <p className="text-sm">{props.description}</p>
