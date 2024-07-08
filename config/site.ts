@@ -1,7 +1,7 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "IPDF",
+  name: "iPDF",
   description:
     "aplicación para manipular archivos PDF en línea de forma gratuita. Fusionar, dividir, comprimir, convertir y editar tus PDFs.",
   keywords: [

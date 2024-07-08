@@ -2,7 +2,7 @@
 import { Button } from "@nextui-org/button";
 import { CircularProgress } from "@nextui-org/progress";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Close, Pdf, Upload } from "../icons";
+import { Close, PdfFile, Upload } from "../icons";
 import { text } from "../primitives";
 import { DragAndDrop } from "./drag-and-drop";
 
@@ -173,7 +173,7 @@ const FileCard = ({
   return (
     <div key={index} className="flex items-center justify-between w-full">
       <div className="flex gap-4">
-        <Pdf className="text-red-500" size={36} />
+        <PdfFile className="text-red-500" size={36} />
         <div>
           <p className={text({ size: "xs", font: "bold" })}>{file.name}</p>
           <p className={text({ color: "disabled", size: "xs" })}>

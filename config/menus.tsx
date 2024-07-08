@@ -1,4 +1,4 @@
-import { FileX, Files } from "@/components/icons";
+import { FileX, Files, PngFile } from "@/components/icons";
 import { IconSvgProps } from "@/types";
 
 export interface Menu {
@@ -24,7 +24,7 @@ export const menus: Menu[] = [
   {
     title: "PDF a Imágenes",
     description: "Convierte tus archivos PDF a imágenes de alta calidad",
-    Icon: FileX,
+    Icon: PngFile,
     href: "/pdf/to/images",
   },
 ];
