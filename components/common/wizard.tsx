@@ -75,7 +75,7 @@ export const Wizard = ({
           ))}
         </ol>
       </div>
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col gap-4 w-full">
         {persistState ? (
           children.map((child, index) => (
             <div key={index} className={clsx({ hidden: index !== active })}>

@@ -114,7 +114,7 @@ export default function Home() {
         onNext={onUpload}
         isDisabled={!file || isPending}
       >
-        <section className="">
+        <section className="overflow-x-auto max-h-[70dvh]">
           <FileUploader
             files={files}
             setFiles={setFiles}
@@ -131,41 +131,36 @@ export default function Home() {
         onPrev={() => true}
         onNext={onRemovePages}
       >
-        <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-          <h1 className={text({ font: "bold", size: "lg" })}>
-            Selecciona las páginas a eliminar
-          </h1>
-          <div className="flex flex-wrap gap-1 justify-center overflow-x-auto max-h-96">
-            {images.map((image, index) => (
-              <div
-                key={index}
-                className={clsx(
-                  "cursor-pointer overflow-hidden",
-                  "rounded-lg transition-all shadow-md border-2",
+        <section className="flex flex-wrap gap-1 overflow-x-auto max-h-[70dvh]">
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className={clsx(
+                "cursor-pointer overflow-hidden",
+                "rounded-lg transition-all shadow-md border-2",
 
-                  {
-                    "border-primary": image.isSelect,
-                    "border-transparent": !image.isSelect,
-                  }
-                )}
-                onClick={() => {
-                  setImages((prev) =>
-                    prev.map((img, i) =>
-                      i === index ? { ...img, isSelect: !img.isSelect } : img
-                    )
-                  );
+                {
+                  "border-primary": image.isSelect,
+                  "border-transparent": !image.isSelect,
+                }
+              )}
+              onClick={() => {
+                setImages((prev) =>
+                  prev.map((img, i) =>
+                    i === index ? { ...img, isSelect: !img.isSelect } : img
+                  )
+                );
+              }}
+            >
+              <img
+                src={image.url}
+                alt={`page-${index}`}
+                style={{
+                  filter: image.isSelect ? "brightness(0.5)" : "none",
                 }}
-              >
-                <img
-                  src={image.url}
-                  alt={`page-${index}`}
-                  style={{
-                    filter: image.isSelect ? "brightness(0.5)" : "none",
-                  }}
-                />
-              </div>
-            ))}
-          </div>
+              />
+            </div>
+          ))}
         </section>
       </Step>
       <Step

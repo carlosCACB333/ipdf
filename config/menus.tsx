@@ -1,4 +1,4 @@
-import { FileX, Files, PngFile } from "@/components/icons";
+import { FileText, FileX, Files, PngFile } from "@/components/icons";
 import { IconSvgProps } from "@/types";
 
 export interface Menu {
@@ -26,5 +26,11 @@ export const menus: Menu[] = [
     description: "Convierte tus archivos PDF a imágenes de alta calidad",
     Icon: PngFile,
     href: "/pdf/to/images",
+  },
+  {
+    title: "Extraer texto",
+    description: "Extrae el texto de tu archivo PDF",
+    Icon: FileText,
+    href: "/pdf/to/text",
   },
 ];

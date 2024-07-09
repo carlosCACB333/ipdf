@@ -63,7 +63,7 @@ export default function Home() {
         onNext={mergePdfs}
         isDisabled={filesUp.length < 2 || isPending}
       >
-        <section className="">
+        <section className="overflow-x-auto max-h-[70dvh]">
           <FileUploader
             files={files}
             setFiles={setFiles}
@@ -83,7 +83,7 @@ export default function Home() {
           return true;
         }}
       >
-        <section className="flex  items-center justify-center h-full">
+        <section className="flex items-center justify-center h-full">
           <p
             className={text({
               size: "md",
