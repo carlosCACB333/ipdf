@@ -2,26 +2,28 @@
 
 import { FileTemp, FileUploader } from "@/components/common/file-uploader";
 import { Step, Wizard } from "@/components/common/wizard";
+import { text } from "@/components/primitives";
 import { Image } from "@nextui-org/image";
 import { useState } from "react";
 import { toast } from "sonner";
+
 const url = process.env.NEXT_PUBLIC_APP_URL;
 
 export default function Home() {
   const [files, setFiles] = useState<FileTemp[]>([]);
+  const [images, setImages] = useState<string[]>([]);
   const [zip, setZip] = useState<string>("");
-  const [urls, setUrls] = useState<string[]>([]);
 
   const file = files.find((file) => file.status === "success");
 
-  const handlePdfToImages = async () => {
+  const handlePdfToText = async () => {
     try {
       if (!file) {
         toast.error("Sube al menos un archivo");
         return false;
       }
 
-      const response = await fetch(`${url}/api/pdf/to/images`, {
+      const response = await fetch(`${url}/api/pdf/get/images`, {
         method: "POST",
         body: JSON.stringify({ url: file.url }),
         headers: {
@@ -36,8 +38,8 @@ export default function Home() {
         return false;
       }
 
+      setImages(data.data.urls);
       setZip(data.data.zip);
-      setUrls(data.data.urls);
       return true;
     } catch (error) {
       toast.error("Ocurrió un error");
@@ -48,13 +50,13 @@ export default function Home() {
   return (
     <Wizard
       persistState
-      title="PDF a Imágenes"
-      description="Convierte tus archivos PDF a imágenes"
+      title="Extraer imágenes de PDF"
+      description="Extrae las imágenes de tu archivo PDF"
     >
       <Step
         title="Sube tu PDF"
         description="Arrastra o selecciona tu PDF"
-        onNext={handlePdfToImages}
+        onNext={handlePdfToText}
         isDisabled={!file}
       >
         <section className="">
@@ -70,23 +72,37 @@ export default function Home() {
       </Step>
 
       <Step
-        title="Descargar imágenes"
-        description="Haz clic en el botón para descargar tus imágenes"
-        isDisabled={!zip}
-        href={zip}
+        title="Imágenes extraídas"
+        description="Imágenes extraídas de tu PDF"
+        isDisabled={images.length === 0}
         onPrev={() => true}
-        buttonTitle="Descargar imágenes"
+        buttonTitle="Descargar ZIP"
+        href={zip}
       >
-        <section className="flex flex-wrap gap-1 overflow-x-auto max-h-[70dvh]">
-          {urls.map((url, index) => (
-            <Image
-              key={index}
-              src={url}
-              alt={`Imagen ${index + 1}`}
-              width="100%"
-              className="w-full h-48 object-cover rounded-lg shadow-md"
-            />
-          ))}
+        <section className="overflow-x-auto max-h-[70dvh]">
+          {images.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {images.map((image, index) => (
+                <Image
+                  key={index}
+                  src={image}
+                  alt={`Imagen ${index + 1}`}
+                  width="100%"
+                  className="w-full h-48 object-cover rounded-lg shadow-md"
+                />
+              ))}
+            </div>
+          ) : (
+            <p
+              className={text({
+                size: "sm",
+                color: "disabled",
+                class: "text-center",
+              })}
+            >
+              No hay imágenes para mostrar
+            </p>
+          )}
         </section>
       </Step>
     </Wizard>

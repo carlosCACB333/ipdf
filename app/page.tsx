@@ -25,7 +25,7 @@ export default function Home() {
             <CardBody>
               <Link href={menu.href}>
                 <div className="flex items-center gap-4 cursor-pointer">
-                  <menu.Icon className="text-primary" size={60} />
+                  <menu.Icon className="text-primary" size={60}  />
                   <div>
                     <h3 className={text({ font: "bold" })}>{menu.title}</h3>
                     <p className={text({ color: "disabled", size: "xs" })}>

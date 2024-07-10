@@ -33,4 +33,10 @@ export const menus: Menu[] = [
     Icon: FileText,
     href: "/pdf/to/text",
   },
+  {
+    title: "Extraer imágenes",
+    description: "Extrae las imágenes de tu archivo PDF",
+    Icon: PngFile,
+    href: "/pdf/get/images",
+  },
 ];
