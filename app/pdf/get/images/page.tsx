@@ -1,5 +1,6 @@
 "use client";
 
+import { getImages } from "@/actions/pdf";
 import { FileTemp, FileUploader } from "@/components/common/file-uploader";
 import { Step, Wizard } from "@/components/common/wizard";
 import { text } from "@/components/primitives";
@@ -23,23 +24,14 @@ export default function Home() {
         return false;
       }
 
-      const response = await fetch(`${url}/api/pdf/get/images`, {
-        method: "POST",
-        body: JSON.stringify({ url: file.url }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await response.json();
-
-      if (data.status !== "SUCCESS") {
-        toast.error(data.message || "ocurrió un error");
+      const res = await getImages(file.url);
+      if (res.status !== "SUCCESS") {
+        toast.error(res.message || "ocurrió un error");
         return false;
       }
 
-      setImages(data.data.urls);
-      setZip(data.data.zip);
+      setImages(res.data!.urls);
+      setZip(res.data!.zip);
       return true;
     } catch (error) {
       toast.error("Ocurrió un error");

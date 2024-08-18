@@ -1,5 +1,6 @@
 "use client";
 
+import { pdfToImages } from "@/actions/pdf";
 import { FileTemp, FileUploader } from "@/components/common/file-uploader";
 import { Step, Wizard } from "@/components/common/wizard";
 import { Image } from "@nextui-org/image";
@@ -15,34 +16,23 @@ export default function Home() {
   const file = files.find((file) => file.status === "success");
 
   const handlePdfToImages = async () => {
-    try {
-      if (!file) {
-        toast.error("Sube al menos un archivo");
-        return false;
-      }
 
-      const response = await fetch(`${url}/api/pdf/to/images`, {
-        method: "POST",
-        body: JSON.stringify({ url: file.url }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await response.json();
-
-      if (data.status !== "SUCCESS") {
-        toast.error(data.message || "ocurrió un error");
-        return false;
-      }
-
-      setZip(data.data.zip);
-      setUrls(data.data.urls);
-      return true;
-    } catch (error) {
-      toast.error("Ocurrió un error");
+    if (!file) {
+      toast.error("Sube al menos un archivo");
       return false;
     }
+
+    const res = await pdfToImages(file.url);
+
+    if (res.status !== "SUCCESS") {
+      toast.error(res.message || "ocurrió un error");
+      return false;
+    }
+
+    setZip(res.data!.zip);
+    setUrls(res.data!.urls);
+    return true;
+
   };
 
   return (

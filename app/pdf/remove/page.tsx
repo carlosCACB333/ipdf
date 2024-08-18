@@ -1,5 +1,6 @@
 "use client";
 
+import { pagesToImages, removePages } from "@/actions/pdf";
 import { FileTemp, FileUploader } from "@/components/common/file-uploader";
 import { Step, Wizard } from "@/components/common/wizard";
 import { text } from "@/components/primitives";
@@ -22,84 +23,62 @@ export default function Home() {
   const isPending = files.some((file) => file.status === "loading");
 
   const onUpload = async () => {
-    try {
-      if (!file) {
-        toast.error("Sube al menos un archivo");
-        return false;
-      }
 
-      if (isPending) {
-        toast.error("Espera a que el archivo termine de subir");
-        return false;
-      }
-
-      const response = await fetch(`${url}/api/pdf/pages/images`, {
-        method: "POST",
-        body: JSON.stringify({ url: file.url }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await response.json();
-
-      if (data.status !== "SUCCESS") {
-        toast.error(data.message || "ocurrió un error");
-        return false;
-      }
-
-      setImages(
-        data.data.map((url: string) => ({ url, isSelect: false } as Image))
-      );
-
-      return true;
-    } catch (error) {
-      toast.error("Ocurrió un error");
+    if (!file) {
+      toast.error("Sube al menos un archivo");
       return false;
     }
+
+    if (isPending) {
+      toast.error("Espera a que el archivo termine de subir");
+      return false;
+    }
+
+    const res = await pagesToImages(file.url);
+
+    if (res.status !== "SUCCESS") {
+      toast.error(res.message || "ocurrió un error");
+      return false;
+    }
+
+    setImages(
+      res.data!.map((url: string) => ({ url, isSelect: false } as Image))
+    );
+
+    return true;
+
   };
 
   const onRemovePages = async () => {
-    try {
-      if (!file) {
-        toast.error("Sube al menos un archivo");
-        return false;
-      }
-      const pages = images
-        .map((image, index) => {
-          if (image.isSelect) {
-            return index + 1;
-          }
-        })
-        .filter((page) => page !== undefined);
 
-      if (pages.length === 0) {
-        toast.error("Selecciona al menos una página");
-        return false;
-      }
-
-      const response = await fetch(`${url}/api/pdf/remove/pages`, {
-        method: "POST",
-        body: JSON.stringify({ url: file.url, pages }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await response.json();
-
-      if (data.status !== "SUCCESS") {
-        toast.error(data.message || "ocurrió un error");
-        return false;
-      }
-
-      setResult(data.data.url);
-
-      return true;
-    } catch (error) {
-      toast.error("Ocurrió un error");
+    if (!file) {
+      toast.error("Sube al menos un archivo");
       return false;
     }
+    const pages = images
+      .map((image, index) => {
+        if (image.isSelect) {
+          return index + 1;
+        }
+      })
+      .filter((page) => page !== undefined);
+
+    if (pages.length === 0) {
+      toast.error("Selecciona al menos una página");
+      return false;
+    }
+
+    const res = await removePages(file.url, pages);
+
+    if (res.status !== "SUCCESS") {
+      toast.error(res.message || "ocurrió un error");
+      return false;
+    }
+
+    setResult(res.data!.url);
+
+    return true;
+
   };
 
   return (

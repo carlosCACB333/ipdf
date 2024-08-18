@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      context: .
+      target: ${STAGE}
+    image: ${APP_IMAGE}
+    ports:
+      - ${PORT}:${PORT}
+    # volumes:
+    #   - .:/code

@@ -1,4 +1,5 @@
 "use client";
+import { mergePdfs } from "@/actions/pdf";
 import { FileTemp, FileUploader } from "@/components/common/file-uploader";
 import { Step, Wizard } from "@/components/common/wizard";
 import { text } from "@/components/primitives";
@@ -14,42 +15,29 @@ export default function Home() {
   const filesUp = files.filter((file) => file.status === "success");
   const isPending = files.some((file) => file.status === "loading");
 
-  const mergePdfs = async () => {
-    try {
-      if (isPending) {
-        toast.error("Espera a que los archivos terminen de subir");
-        return false;
-      }
+  const handleMergePdfs = async () => {
 
-      if (filesUp.length < 2) {
-        toast.error("Debes subir al menos dos PDFs");
-        return false;
-      }
-
-      const response = await fetch(`${url}/api/pdf/merge`, {
-        method: "POST",
-        body: JSON.stringify({
-          urls: filesUp.map((file) => file.url),
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const json = await response.json();
-      console.log(json);
-      if (json.status !== "SUCCESS") {
-        toast.error("Error al unir los PDFs");
-        return false;
-      }
-
-      toast.success("PDFs unidos correctamente");
-      setOutput(json.data.url);
-      return true;
-    } catch (error) {
-      console.error(error);
+    if (isPending) {
+      toast.error("Espera a que los archivos terminen de subir");
       return false;
     }
+
+    if (filesUp.length < 2) {
+      toast.error("Debes subir al menos dos PDFs");
+      return false;
+    }
+
+    const res = await mergePdfs(filesUp.map((file) => file.url));
+
+    if (res.status !== "SUCCESS") {
+      toast.error("Error al unir los PDFs");
+      return false;
+    }
+
+    toast.success("PDFs unidos correctamente");
+    setOutput(res.data!.url);
+    return true;
+
   };
 
   return (
@@ -60,7 +48,7 @@ export default function Home() {
       <Step
         title="Subir PDFs"
         description="Arrastra y suelta tus PDFs o haz clic para seleccionarlos"
-        onNext={mergePdfs}
+        onNext={handleMergePdfs}
         isDisabled={filesUp.length < 2 || isPending}
       >
         <section className="overflow-x-auto max-h-[70dvh]">
