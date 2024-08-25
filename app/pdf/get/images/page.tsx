@@ -8,7 +8,6 @@ import { Image } from "@nextui-org/image";
 import { useState } from "react";
 import { toast } from "sonner";
 
-const url = process.env.NEXT_PUBLIC_APP_URL;
 
 export default function Home() {
   const [files, setFiles] = useState<FileTemp[]>([]);
@@ -55,8 +54,8 @@ export default function Home() {
           <FileUploader
             files={files}
             setFiles={setFiles}
-            uploadURL={`${url}/api/pdf/upload`}
-            deleteURL={`${url}/api/pdf/delete`}
+            uploadURL={"/api/upload"}
+            deleteURL={"/api/delete"}
             maxFiles={1}
           />
           <br />

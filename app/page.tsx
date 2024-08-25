@@ -2,25 +2,27 @@ import { Lock, MoodSmile, Rocket } from "@/components/icons";
 import { text } from "@/components/primitives";
 import { menus } from "@/config/menus";
 import { Card, CardBody } from "@nextui-org/card";
+import { lookup } from "dns";
 import Link from "next/link";
+import { hostname } from "os";
 
 export default async function Home() {
-  // const myIp: String = await new Promise((resolve, reject) => {
-  //   lookup(hostname(), (err, address) => {
-  //     if (err) {
-  //       reject(err);
-  //     }
-  //     resolve(address);
-  //   });
-  // }
-  // );
+  const myIp: String = await new Promise((resolve, reject) => {
+    lookup(hostname(), (err, address) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(address);
+    });
+  }
+  );
 
 
   return (
     <section className="flex flex-col items-center justify-center gap-16 py-8 md:py-10">
       <div className="inline-block max-w-lg text-center justify-center">
-        {/* <h1 className={text({ size: "xl", color: 'violet' })}>{myIp}</h1>
-        <br /> */}
+        <h1 className={text({ size: "xl", color: 'violet' })}>{myIp}</h1>
+        <br />
         <h1>
           <span className={text({ size: "xl" })}>Solución&nbsp;</span>
           <span className={text({ size: "xl", color: "blue" })}>

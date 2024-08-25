@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const env = z.object({
-  NEXT_PUBLIC_APP_URL: z.string().url(),
+  CORE_APP_URL: z.string().url(),
   PORT: z.string(),
 });
 

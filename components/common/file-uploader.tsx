@@ -6,7 +6,6 @@ import { Close, PdfFile, Upload } from "../icons";
 import { text } from "../primitives";
 import { DragAndDrop } from "./drag-and-drop";
 
-const base_url = process.env.NEXT_PUBLIC_APP_URL;
 
 export interface FileTemp {
   file: File;
@@ -94,9 +93,9 @@ const FileCard = ({
       prev.map((item, i) =>
         i === index
           ? {
-              ...item,
-              ...state,
-            }
+            ...item,
+            ...state,
+          }
           : item
       )
     );
@@ -149,7 +148,7 @@ const FileCard = ({
     try {
       setState({ status: "loading" });
 
-      const file_url = file.url.replace(base_url + "/uploads/", "");
+      const file_url = file.url.split("/").pop();
       const url = deleteURL + "/" + file_url;
 
       const request = new XMLHttpRequest();

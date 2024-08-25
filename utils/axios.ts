@@ -13,7 +13,7 @@ export async function axios<
   T extends Record<string, any> = Record<string, any>
 >(url: string, options: FetchOptions = {}): Promise<Res<T>> {
   const {
-    baseUrl = process.env.NEXT_PUBLIC_APP_URL,
+    baseUrl = process.env.CORE_APP_URL,
     headers = {},
     params,
     ...restOptions
@@ -27,7 +27,11 @@ export async function axios<
   }
 
   const defaultHeaders: HeadersInit = {
-    "Content-Type": "application/json",
+    ...(restOptions.body instanceof FormData
+      ? {}
+      : {
+          "Content-Type": "application/json",
+        }),
     ...headers,
   };
 

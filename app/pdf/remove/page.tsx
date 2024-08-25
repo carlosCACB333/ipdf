@@ -7,7 +7,6 @@ import { text } from "@/components/primitives";
 import clsx from "clsx";
 import { useState } from "react";
 import { toast } from "sonner";
-const url = process.env.NEXT_PUBLIC_APP_URL;
 
 interface Image {
   url: string;
@@ -97,8 +96,8 @@ export default function Home() {
           <FileUploader
             files={files}
             setFiles={setFiles}
-            uploadURL={`${url}/api/pdf/upload`}
-            deleteURL={`${url}/api/pdf/delete`}
+            uploadURL={"/api/upload"}
+            deleteURL={"/api/delete"}
             maxFiles={1}
           />
           <br />
