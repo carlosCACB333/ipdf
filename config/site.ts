@@ -48,6 +48,6 @@ export const siteConfig = {
   links: {
     github: "https://github.com/carlosCACB333/ipdf",
     twitter: "https://x.com/carloscb8080",
-    sponsor: "https://carloscb.com",
+    sponsor: "https://devcastillo.com",
   },
 };
